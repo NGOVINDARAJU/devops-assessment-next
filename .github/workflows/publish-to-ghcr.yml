@@ -35,5 +35,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/my-next-app:latest
-            ghcr.io/${{ github.repository_owner }}/my-next-app:${{ github.sha }}
+            ghcr.io/${{ toLower(github.repository_owner) }}/my-next-app:latest
+            ghcr.io/${{ toLower(github.repository_owner) }}/my-next-app:${{ github.sha }}
