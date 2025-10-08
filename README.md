@@ -49,8 +49,8 @@ Open your browser at: [http://localhost:3000](http://localhost:3000)
 - Builds Docker image and pushes to GHCR
 
 **Image tags:**
-- `ghcr.io/<YOUR_GITHUB_USERNAME>/my-next-app:latest`
-- `ghcr.io/<YOUR_GITHUB_USERNAME>/my-next-app:<commit-sha>`
+- `ghcr.io/ngovindaraju/my-next-app:latest`
+- `ghcr.io/ngovindaraju/my-next-app:<commit-sha>`
 
 **Notes:**
 - GHCR requires lowercase usernames and repository names
