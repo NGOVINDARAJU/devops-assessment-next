@@ -16,10 +16,16 @@ This project demonstrates:
 - kubectl
 - Minikube
 
-### 2 .Run Next.js App Locally
-```bash
-npm install
-npm run dev
+# 2 .Run Next.js App Locally
+  ```bash
+    npm install
+    npm run dev
 - Open your browser at: http://localhost:3000
+
+
+
+
+
+
 
 
