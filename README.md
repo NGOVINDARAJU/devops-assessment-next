@@ -1,4 +1,4 @@
-# DevOps Assessment – Next.js Container, GHCR & Minikube
+# DevOps Assessment - Next.js Container + GHCR + Minikube
 
 ## Project Overview
 
@@ -45,10 +45,12 @@ Open your browser at: [http://localhost:3000](http://localhost:3000)
 
 ## 3. GitHub Actions & GHCR
 
-- Workflow: `.github/workflows/publish-to-ghcr.yml` triggers on push to `main`
-- Builds Docker image and pushes to GHCR:
-	- `ghcr.io/<YOUR_GITHUB_USERNAME>/my-next-app:latest`
-	- `ghcr.io/<YOUR_GITHUB_USERNAME>/my-next-app:<commit-sha>`
+- Workflow triggers on push to `main` branch
+- Builds Docker image and pushes to GHCR
+
+**Image tags:**
+- `ghcr.io/<YOUR_GITHUB_USERNAME>/my-next-app:latest`
+- `ghcr.io/<YOUR_GITHUB_USERNAME>/my-next-app:<commit-sha>`
 
 **Notes:**
 - GHCR requires lowercase usernames and repository names
@@ -58,91 +60,26 @@ Open your browser at: [http://localhost:3000](http://localhost:3000)
 
 ## 4. Kubernetes Deployment (Minikube)
 
-**Manifests:** See `k8s/deployment.yaml` and `k8s/service.yaml`
+**Deployment Steps:**
 
-**Deployment Example:**
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-	name: nextjs-deployment
-	labels:
-		app: nextjs
-spec:
-	replicas: 2
-	selector:
-		matchLabels:
-			app: nextjs
-	template:
-		metadata:
-			labels:
-				app: nextjs
-		spec:
-			containers:
-				- name: nextjs
-					image: ghcr.io/<YOUR_GITHUB_USERNAME>/my-next-app:latest
-					ports:
-						- containerPort: 3000
-					readinessProbe:
-						httpGet:
-							path: /
-							port: 3000
-						initialDelaySeconds: 5
-						periodSeconds: 10
-					livenessProbe:
-						httpGet:
-							path: /
-							port: 3000
-						initialDelaySeconds: 15
-						periodSeconds: 20
-```
-
-**Service Example:**
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-	name: nextjs-service
-spec:
-	selector:
-		app: nextjs
-	type: NodePort
-	ports:
-		- protocol: TCP
-			port: 80
-			targetPort: 3000
-			nodePort: 30080
-```
-
-**Deploy to Minikube:**
+Start Minikube:
 ```bash
 minikube start
+```
+
+Apply Kubernetes manifests stored in the project’s `k8s/` folder:
+```bash
 kubectl apply -f k8s/
 kubectl get pods -w
+```
+
+Access the service:
+```bash
 minikube service nextjs-service --url
 ```
-Access the app at the URL printed (e.g., `http://127.0.0.1:51454`)
+Example URL: `http://127.0.0.1:51454`
 
-> ⚠️ Keep the terminal open while using Docker driver on Windows
+> ⚠️ Keep the terminal open if using Docker driver on Windows
 
----
-
-## 5. Submission Details
-
-- GitHub Repository: `https://github.com/<YOUR_GITHUB_USERNAME>/<YOUR_REPO>`
-- GHCR Image: `ghcr.io/<YOUR_GITHUB_USERNAME>/my-next-app:latest`
-
----
-
-## 6. Notes & Tips
-
-- **Health checks:**  
-	- `readinessProbe` ensures the pod is ready to accept traffic  
-	- `livenessProbe` ensures the pod is alive
-- Use lowercase for GitHub usernames and repo names in GHCR image tags
-- Minikube NodePort allows local access to your app without exposing it to the public internet
-
----
-
-Replace `<YOUR_GITHUB_USERNAME>` and `<YOUR_REPO>` with your actual GitHub username and repository name.
-
+**Note:**  
+The `k8s/` folder contains deployment and service manifests, which handle replicas, ports, and health checks.
